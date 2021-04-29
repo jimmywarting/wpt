@@ -1,11 +1,8 @@
-import base64
+from base64 import decodebytes
 import json
 import os
 
 from wptserve.utils import isomorphic_decode, isomorphic_encode
-
-def decodebytes(s):
-    return base64.decodebytes(s)
 
 def main(request, response):
     headers = []

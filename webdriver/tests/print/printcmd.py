@@ -1,21 +1,17 @@
-import base64
+from base64 import decodebytes
 
 import pytest
 
-import six
-
 from tests.support.asserts import assert_error, assert_success
 
-def decodebytes(s):
-    return base64.decodebytes(six.ensure_binary(s))
 
-def do_print(session, options):
+def do_print(session, options) -> str:
     return session.transport.send(
         "POST", "session/{session_id}/print".format(**vars(session)),
         options)
 
 
-def assert_pdf(data):
+def assert_pdf(data: bytes):
     assert data.startswith(b"%PDF-"), "Decoded data starts with the PDF signature"
     assert data.endswith(b"%%EOF\n"), "Decoded data ends with the EOF flag"
 
@@ -28,7 +24,7 @@ def test_no_top_browsing_context(session, closed_window):
 def test_no_browsing_context(session, closed_frame):
     response = do_print(session, {})
     value = assert_success(response)
-    pdf = decodebytes(value)
+    pdf = decodebytes(value.encode())
     assert_pdf(pdf)
 
 
@@ -41,7 +37,7 @@ def test_html_document(session, inline):
         "shrinkToFit": False
     })
     value = assert_success(response)
-    pdf = decodebytes(value)
+    pdf = decodebytes(value.encode())
     # TODO: Test that the output is reasonable
     assert_pdf(pdf)
 

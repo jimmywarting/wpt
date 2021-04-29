@@ -1,17 +1,12 @@
-import base64
+from base64 import decodebytes
 import math
 import struct
-
-import six
 
 from tests.support.asserts import assert_png
 
 
-def decodebytes(s):
-    return base64.decodebytes(six.ensure_binary(s))
-
-def png_dimensions(screenshot):
+def png_dimensions(screenshot: str):
     assert_png(screenshot)
-    image = decodebytes(screenshot)
+    image = decodebytes(screenshot.encode())
     width, height = struct.unpack(">LL", image[16:24])
     return int(width), int(height)
