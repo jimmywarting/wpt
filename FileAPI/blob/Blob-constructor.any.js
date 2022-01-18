@@ -328,6 +328,7 @@ t_ports.step(function() {
     channel.port2.onmessage = this.step_func(function(e) {
         var b_ports = new Blob(e.ports);
         assert_equals(b_ports.size, "[object MessagePort]".length);
+        channel.port2.onmessage = null;
         this.done();
     });
     var channel2 = new MessageChannel();
